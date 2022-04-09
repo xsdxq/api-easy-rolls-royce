@@ -12,7 +12,7 @@ api = Api(testinfo_blueprint)
 api.add_resource(TestInfoResource, '/testInfo/<RecordID>', '/testInfo', endpoint='testInfo')
 
 
-# joint query
+# get_excel
 @testinfo_blueprint.route('/test/get_excel', methods=['POST'], endpoint='get_excel')
 def Test_query():
     return TestInfoOtherResource.get_excel()

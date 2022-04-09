@@ -6,6 +6,7 @@ from flask_restful import Resource, reqparse
 from utils import commons, loggings
 from utils.response_code import RET
 from service.testInfoService import TestInfoService
+from service.BatchService import BatchService
 from flask import send_from_directory
 from flask import make_response
 
@@ -14,25 +15,33 @@ class TestInfoOtherResource(Resource):
     # 生成excel
     @classmethod
     def get_excel(cls):
-        parser = reqparse.RequestParser()
-        parser.add_argument('BatchID', location='form', required=True, help='BatchID参数类型不正确或缺失')
+        # parser = reqparse.RequestParser()
+        # parser.add_argument('BatchID', location='form', required=False, help='BatchID参数类型不正确或缺失')
+        #
+        # try:
+        #     kwargs = parser.parse_args()
+        #     kwargs = commons.put_remove_none(**kwargs)
+        # except Exception as e:
+        #     loggings.exception(1, e)
+        #     return jsonify(code=RET.PARAMERR, message='参数类型不正确或缺失', error='参数类型不正确或缺失')
+
+        data = BatchService.get_isCurrent()
+        BatchID = data[0]['BatchID']
+        res = TestInfoService.get_excel(BatchID)
 
         try:
-            kwargs = parser.parse_args()
-            kwargs = commons.put_remove_none(**kwargs)
-        except Exception as e:
-            loggings.exception(1, e)
-            return jsonify(code=RET.PARAMERR, message='参数类型不正确或缺失', error='参数类型不正确或缺失')
+            if res['code'] == RET.OK:
+                file_path = res['file_path']
+                filename = res['file_name']
+                response = make_response(send_from_directory(file_path, filename, as_attachment=True))
+                response.headers["Content-Disposition"] = "attachment; filename={}".format(
+                    filename.encode().decode('latin-1'))
+                return response
+            else:
+                return jsonify(code=res['code'], message=res['message'], error=res['error'])
 
-        res = TestInfoService.get_excel(**kwargs)
 
-        try:
-            file_path = res['file_path']
-            filename = res['file_name']
-            response = make_response(send_from_directory(file_path, filename, as_attachment=True))
-            response.headers["Content-Disposition"] = "attachment; filename={}".format(
-                filename.encode().decode('latin-1'))
-            return response
+
         except Exception as e:
             loggings.exception(1, e)
             return jsonify(code=RET.IOERR, message="文件下载异常:下载文件不存在")

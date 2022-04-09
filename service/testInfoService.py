@@ -18,18 +18,9 @@ class TestInfoService(TestInfoController):
 
     # 生成excel
     @classmethod
-    def get_excel(cls, **kwargs):
+    def get_excel(cls, kwargs):
         try:
-            filter_list = []
-            filter_list.append(cls.IsDelete == 0)
-            if kwargs.get('BatchID'):
-                filter_list.append(cls.BatchID == kwargs.get('BatchID'))
-
-            if kwargs.get('IsDelete'):
-                filter_list.append(cls.IsDelete == kwargs.get('IsDelete'))
-            if kwargs.get('CreateTime'):
-                filter_list.append(cls.CreateTime == kwargs.get('CreateTime'))
-
+            filter_list = [cls.IsDelete == 0, cls.BatchID == kwargs]
             task_info = db.session.query(
                 TestInfo.Class,
                 TestInfo.Name,
@@ -46,7 +37,7 @@ class TestInfoService(TestInfoController):
             info_value = []
             for i, x in enumerate(results):
                 info = list(x.values())
-                index = [str(i)]
+                index = [str(i+1)]
                 info_value.append(index + info)
 
             # import xlwt
@@ -149,8 +140,10 @@ class TestInfoService(TestInfoController):
             results = commons.query_to_dict(task_info)
             for x in results:
                 batch_info = BatchService.get_info(x['BatchID'])
-                print(batch_info)
-                x['batch_info'] = batch_info[0]
+                if batch_info['code'] == RET.OK:
+                    x['batch_info'] = batch_info['info'][0]
+                else:
+                    return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': '批次号不存在！'}
             return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'totalCount': count, 'totalPage': pages,
                     'data': results}
 
