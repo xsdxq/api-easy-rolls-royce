@@ -15,4 +15,4 @@ class Batch(db.Model):
     Term = db.Column(db.String(2, 'utf8mb4_0900_ai_ci'), info='学期：1 or 2')
     Week = db.Column(db.String(5, 'utf8mb4_0900_ai_ci'), info='周次')
     IsCurrent = db.Column(db.Integer, info='是否最新周次：1-是；0-否')
-    IsDelete = db.Column(db.Integer, info='是否删除:1-是；0-否')
+    IsDelete = db.Column(db.Integer,server_default=db.FetchedValue(), info='是否删除:1-是；0-否')

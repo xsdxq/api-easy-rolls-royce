@@ -19,4 +19,4 @@ class TestInfo(db.Model):
     ImageUrl = db.Column(db.String(2000), info='上传截图url')
     TestResults = db.Column(db.String(25), info='检测结果')
     CreateTime = db.Column(db.DateTime, info='创建时间')
-    IsDelete = db.Column(db.Integer, info='标志该条数据是否有效: 0--表示有效,1--无效')
+    IsDelete = db.Column(db.Integer, server_default=db.FetchedValue(),info='标志该条数据是否有效: 0--表示有效,1--无效')

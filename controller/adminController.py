@@ -28,7 +28,6 @@ class AdminController(Admin):
                 AdminPassword=kwargs.get('AdminPassword'),
                 CreateTime=kwargs.get('CreateTime'),
                 IsDelete=kwargs.get('IsDelete'),
-                
             )
             db.session.add(model)
             db.session.commit()

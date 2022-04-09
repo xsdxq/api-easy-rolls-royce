@@ -33,7 +33,6 @@ class TestInfoController(TestInfo):
                 ImageUrl=kwargs.get('ImageUrl'),
                 TestResults=kwargs.get('TestResults'),
                 CreateTime=kwargs.get('CreateTime'),
-                
             )
             db.session.add(model)
             db.session.commit()

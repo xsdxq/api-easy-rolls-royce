@@ -13,18 +13,7 @@ class BatchResource(Resource):
 
     # get
     @classmethod
-    def get(cls, AutoID=None):
-        if AutoID:
-            kwargs = {
-                'AutoID': AutoID
-            }
-
-            res = BatchController.get(**kwargs)
-            if res['code'] == RET.OK:
-                return jsonify(code=res['code'], message=res['message'], data=res['data'])
-            else:
-                return jsonify(code=res['code'], message=res['message'], data=res['data'])
-
+    def get(cls):
         parser = reqparse.RequestParser()
         parser.add_argument('BatchID', location='args', required=False, help='BatchID参数类型不正确或缺失')
         parser.add_argument('Year', location='args', required=False, help='Year参数类型不正确或缺失')
@@ -39,6 +28,7 @@ class BatchResource(Resource):
         kwargs = commons.put_remove_none(**kwargs)
 
         res = BatchController.get(**kwargs)
+
         if res['code'] == RET.OK:
             return jsonify(code=res['code'], message=res['message'], data=res['data'], totalPage=res['totalPage'], totalCount=res['totalCount'])
         else:
@@ -72,21 +62,16 @@ class BatchResource(Resource):
 
     # put
     @classmethod
-    def put(cls, AutoID):
-        if not AutoID:
-            return jsonify(code=RET.NODATA, message='primary key missed', error='primary key missed')
-
+    def put(cls):
         parser = reqparse.RequestParser()
-        parser.add_argument('BatchID', location='form', required=False, help='BatchID参数类型不正确或缺失')
-        parser.add_argument('Year', location='form', required=False, help='Year参数类型不正确或缺失')
-        parser.add_argument('Term', location='form', required=False, help='Term参数类型不正确或缺失')
-        parser.add_argument('Week', location='form', required=False, help='Week参数类型不正确或缺失')
+        parser.add_argument('BatchID', location='form', required=True, help='BatchID参数类型不正确或缺失')
+        # parser.add_argument('Year', location='form', required=False, help='Year参数类型不正确或缺失')
+        # parser.add_argument('Term', location='form', required=False, help='Term参数类型不正确或缺失')
+        # parser.add_argument('Week', location='form', required=False, help='Week参数类型不正确或缺失')
         parser.add_argument('IsCurrent', location='form', required=False, help='IsCurrent参数类型不正确或缺失')
         
         kwargs = parser.parse_args()
         kwargs = commons.put_remove_none(**kwargs)
-        kwargs['AutoID'] = AutoID
-
         res = BatchController.update(**kwargs)
 
         return jsonify(code=res['code'], message=res['message'], data=res['data'])
@@ -108,12 +93,10 @@ class BatchResource(Resource):
             res = BatchController.add_list(**kwargs)
 
         else:
-            parser.add_argument('AutoID', location='form', required=True, help='AutoID参数类型不正确或缺失')
-            parser.add_argument('BatchID', location='form', required=False, help='BatchID参数类型不正确或缺失')
-            parser.add_argument('Year', location='form', required=False, help='Year参数类型不正确或缺失')
-            parser.add_argument('Term', location='form', required=False, help='Term参数类型不正确或缺失')
-            parser.add_argument('Week', location='form', required=False, help='Week参数类型不正确或缺失')
-            parser.add_argument('IsCurrent', location='form', required=False, help='IsCurrent参数类型不正确或缺失')
+            parser.add_argument('Year', location='form', required=True, help='Year参数类型不正确或缺失')
+            parser.add_argument('Term', location='form', required=True, help='Term参数类型不正确或缺失')
+            parser.add_argument('Week', location='form', required=True, help='Week参数类型不正确或缺失')
+            parser.add_argument('IsCurrent', location='form', required=True, help='IsCurrent参数类型不正确或缺失')
             
             kwargs = parser.parse_args()
             kwargs = commons.put_remove_none(**kwargs)

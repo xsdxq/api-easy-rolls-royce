@@ -10,6 +10,7 @@ from sqlalchemy import or_
 from app import db
 from models.BatchModel import Batch
 from utils import commons
+from utils.generate_id import GenerateID
 from utils.response_code import RET, error_map_EN
 from utils.loggings import loggings
 
@@ -19,23 +20,27 @@ class BatchController(Batch):
     # add
     @classmethod
     def add(cls, **kwargs):
+        #如果新添加批次设为当前批次：
+        if kwargs.get('IsCurrent') == 1:
+            filter_list = [cls.IsDelete == 0]
+            filter_list.append(cls.IsCurrent == 1)
+            Batch_info = db.session.query(cls).filter(*filter_list)
+            results = commons.query_to_dict(Batch_info)
+            print(results)
         
         try:
             model = Batch(
-                AutoID=kwargs.get('AutoID'),
-                BatchID=kwargs.get('BatchID'),
+                BatchID=GenerateID.create_random_id(),
                 Year=kwargs.get('Year'),
                 Term=kwargs.get('Term'),
                 Week=kwargs.get('Week'),
                 IsCurrent=kwargs.get('IsCurrent'),
-                
             )
             db.session.add(model)
             db.session.commit()
             results = {
                 'add_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'AutoID': model.AutoID,
-                
+                'BatchID': model.BatchID,
             }
             return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': results}
             
@@ -51,20 +56,18 @@ class BatchController(Batch):
     def get(cls, **kwargs):
         try:
             filter_list = [cls.IsDelete == 0]
-            if kwargs.get('AutoID'):
-                filter_list.append(cls.AutoID == kwargs['AutoID'])
-            else:
-                if kwargs.get('BatchID') is not None:
-                    filter_list.append(cls.BatchID == kwargs.get('BatchID'))
-                if kwargs.get('Year'):
-                    filter_list.append(cls.Year == kwargs.get('Year'))
-                if kwargs.get('Term'):
-                    filter_list.append(cls.Term == kwargs.get('Term'))
-                if kwargs.get('Week'):
-                    filter_list.append(cls.Week == kwargs.get('Week'))
-                if kwargs.get('IsCurrent') is not None:
-                    filter_list.append(cls.IsCurrent == kwargs.get('IsCurrent'))
-                
+
+            if kwargs.get('BatchID') is not None:
+                filter_list.append(cls.BatchID == kwargs.get('BatchID'))
+            if kwargs.get('Year'):
+                filter_list.append(cls.Year == kwargs.get('Year'))
+            if kwargs.get('Term'):
+                filter_list.append(cls.Term == kwargs.get('Term'))
+            if kwargs.get('Week'):
+                filter_list.append(cls.Week == kwargs.get('Week'))
+            if kwargs.get('IsCurrent') is not None:
+                filter_list.append(cls.IsCurrent == kwargs.get('IsCurrent'))
+
 
             page = int(kwargs.get('Page', 1))
             size = int(kwargs.get('Size', 10))
@@ -134,14 +137,13 @@ class BatchController(Batch):
         try:
             
             filter_list = [cls.IsDelete == 0]
-            filter_list.append(cls.AutoID == kwargs.get('AutoID'))
+            filter_list.append(cls.BatchID == kwargs.get('BatchID'))
             
             res = db.session.query(cls).filter(*filter_list).with_for_update()
 
             results = {
                 'update_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'AutoID': res.first().AutoID,
-                
+                'BatchID': res.first().BatchID,
             }
             
             res.update(kwargs)
