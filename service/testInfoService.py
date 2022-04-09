@@ -37,11 +37,8 @@ class TestInfoService(TestInfoController):
 
         return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': results}
 
+        # 列表查询
 
-
-
-
-    # 列表查询
     @classmethod
     def joint_query(cls, **kwargs):
         try:
@@ -95,32 +92,7 @@ class TestInfoService(TestInfoController):
             db.session.close()
 
     @classmethod
-    #小程序信息提交和图片上传识别
+    # 小程序信息提交和图片上传识别
     def infosubmit(cls, **kwargs):
 
-
-
-
         pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

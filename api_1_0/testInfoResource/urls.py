@@ -13,13 +13,13 @@ api.add_resource(TestInfoResource, '/testInfo/<RecordID>', '/testInfo', endpoint
 
 
 # joint query
-@testinfo_blueprint.route('/task/query', methods=['GET'], endpoint='task_query')
+@testinfo_blueprint.route('/test/query', methods=['GET'], endpoint='test_query')
 def Task_query():
     return TestInfoOtherResource.joint_query()
 
 
 # joint query
-@testinfo_blueprint.route('/task/delete', methods=['POST'], endpoint='task_delete')
+@testinfo_blueprint.route('/test/delete', methods=['POST'], endpoint='test_delete')
 def Task_query():
     return TestInfoOtherResource.test_delete()
 
