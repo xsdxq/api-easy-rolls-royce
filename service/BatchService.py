@@ -35,3 +35,25 @@ class BatchService(BatchController):
             return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'error': str(e)}
         finally:
             db.session.close()
+
+    # 获取当前最新批次的ID
+    @classmethod
+    def get_isCurrent(cls):
+        try:
+            filter_list = [cls.IsDelete == 0, cls.IsCurrent == 1]
+            task_info = db.session.query(
+                Batch.BatchID
+            ).filter(*filter_list).all()
+
+            if not task_info:
+                return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': 'No data to update'}
+
+            # 处理返回的数据
+            results = commons.query_to_dict(task_info)
+            return results
+
+        except Exception as e:
+            # loggings.exception(1, e)
+            return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'error': str(e)}
+        finally:
+            db.session.close()

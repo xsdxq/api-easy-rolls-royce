@@ -18,18 +18,9 @@ class TestInfoService(TestInfoController):
 
     # 生成excel
     @classmethod
-    def get_excel(cls, **kwargs):
+    def get_excel(cls, kwargs):
         try:
-            filter_list = []
-            filter_list.append(cls.IsDelete == 0)
-            if kwargs.get('BatchID'):
-                filter_list.append(cls.BatchID == kwargs.get('BatchID'))
-
-            if kwargs.get('IsDelete'):
-                filter_list.append(cls.IsDelete == kwargs.get('IsDelete'))
-            if kwargs.get('CreateTime'):
-                filter_list.append(cls.CreateTime == kwargs.get('CreateTime'))
-
+            filter_list = [cls.IsDelete == 0, cls.BatchID == kwargs]
             task_info = db.session.query(
                 TestInfo.Class,
                 TestInfo.Name,
@@ -46,7 +37,7 @@ class TestInfoService(TestInfoController):
             info_value = []
             for i, x in enumerate(results):
                 info = list(x.values())
-                index = [str(i)]
+                index = [str(i+1)]
                 info_value.append(index + info)
 
             # import xlwt
