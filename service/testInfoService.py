@@ -4,6 +4,7 @@ import math
 import datetime
 
 from controller.testInfoController import TestInfoController
+from service.BatchService import BatchService
 from models.testInfoModel import TestInfo
 from utils import commons, loggings
 from utils.response_code import RET, error_map_EN
@@ -44,14 +45,19 @@ class TestInfoService(TestInfoController):
         try:
             filter_list = []
             filter_list.append(cls.IsDelete == 0)
+            # 模糊查询
             if kwargs.get('Class'):
-                filter_list.append(cls.Class == kwargs.get('Class'))
+                class_text = kwargs.get('Class')
+                filter_list.append(cls.Class.like('%' + class_text + '%'))
             if kwargs.get('Name'):
-                filter_list.append(cls.Name == kwargs.get('Name'))
+                name_text = kwargs.get('Name')
+                filter_list.append(cls.Name.like('%' + name_text + '%'))
             if kwargs.get('BatchID'):
-                filter_list.append(cls.BatchID == kwargs.get('BatchID'))
+                BatchID = kwargs.get('BatchID')
+                filter_list.append(cls.BatchID.like('%' + BatchID + '%'))
             if kwargs.get('StudentID'):
-                filter_list.append(cls.StudentID == kwargs.get('StudentID'))
+                studentID = kwargs.get('StudentID')
+                filter_list.append(cls.StudentID.like('%' + studentID + '%'))
 
             if kwargs.get('IsDelete'):
                 filter_list.append(cls.IsDelete == kwargs.get('IsDelete'))
@@ -82,6 +88,10 @@ class TestInfoService(TestInfoController):
 
             # 处理返回的数据
             results = commons.query_to_dict(task_info)
+            for x in results:
+                batch_info = BatchService.get_info(x['BatchID'])
+                print(batch_info)
+                x['batch_info'] = batch_info[0]
             return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'totalCount': count, 'totalPage': pages,
                     'data': results}
 
