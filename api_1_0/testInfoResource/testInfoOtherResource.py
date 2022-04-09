@@ -37,4 +37,22 @@ class TestInfoOtherResource(Resource):
 						   totalPage=res['totalPage'])
 		else:
 			return jsonify(code=res['code'], message=res['message'], error=res['error'])
+
+	@classmethod
+	def test_delete(cls):
+		parser = reqparse.RequestParser()
+		parser.add_argument('RecordID', location='form', required=True, help='BatchID参数类型不正确或缺失')
+
+		try:
+			kwargs = parser.parse_args()
+			kwargs = commons.put_remove_none(**kwargs)
+		except Exception as e:
+			loggings.exception(1, e)
+			return jsonify(code=RET.PARAMERR, message='参数类型不正确或缺失', error='参数类型不正确或缺失')
+
+		res = TestInfoService.test_delete(**kwargs)
+		if res['code'] == RET.OK:
+			return jsonify(code=res['code'], message=res['message'], data=res['data'])
+		else:
+			return jsonify(code=res['code'], message=res['message'], error=res['error'])
 	pass

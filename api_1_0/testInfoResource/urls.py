@@ -18,3 +18,9 @@ def Task_query():
     return TestInfoOtherResource.joint_query()
 
 
+# joint query
+@testinfo_blueprint.route('/task/delete', methods=['POST'], endpoint='task_delete')
+def Task_query():
+    return TestInfoOtherResource.test_delete()
+
+

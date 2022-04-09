@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 import math
+import datetime
 
 from controller.testInfoController import TestInfoController
 from models.testInfoModel import TestInfo
@@ -10,6 +11,36 @@ from app import db
 
 
 class TestInfoService(TestInfoController):
+
+    @classmethod
+    def test_delete(cls, **kwargs):
+        filter_list = []
+        filter_list.append(cls.IsDelete == 0)
+        if kwargs.get('RecordID'):
+            filter_list.append(cls.RecordID == kwargs.get('RecordID'))
+
+        # page = int(kwargs.get('Page', 1))
+        # size = int(kwargs.get('Size', 10))
+
+        res = db.session.query(cls).filter(*filter_list).with_for_update()
+
+        results = {
+            'delete_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'RecordID': []
+        }
+
+        for query_model in res.all():
+            results['RecordID'].append(query_model.RecordID)
+
+        res.update({'IsDelete': 1})
+        db.session.commit()
+
+        return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': results}
+
+
+
+
+
     # 列表查询
     @classmethod
     def joint_query(cls, **kwargs):
@@ -71,3 +102,25 @@ class TestInfoService(TestInfoController):
 
 
         pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
