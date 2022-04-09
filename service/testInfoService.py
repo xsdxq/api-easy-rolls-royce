@@ -2,6 +2,9 @@
 # -*- coding:utf-8 -*-
 import math
 import datetime
+import os
+
+from xlwt import Workbook
 
 from controller.testInfoController import TestInfoController
 from service.BatchService import BatchService
@@ -13,6 +16,61 @@ from app import db
 
 class TestInfoService(TestInfoController):
 
+    # 生成excel
+    @classmethod
+    def get_excel(cls, **kwargs):
+        try:
+            filter_list = []
+            filter_list.append(cls.IsDelete == 0)
+            if kwargs.get('BatchID'):
+                filter_list.append(cls.BatchID == kwargs.get('BatchID'))
+
+            if kwargs.get('IsDelete'):
+                filter_list.append(cls.IsDelete == kwargs.get('IsDelete'))
+            if kwargs.get('CreateTime'):
+                filter_list.append(cls.CreateTime == kwargs.get('CreateTime'))
+
+            task_info = db.session.query(
+                TestInfo.Class,
+                TestInfo.Name,
+                TestInfo.StudentID,
+                TestInfo.TestTime,
+                TestInfo.TestResults,
+            ).filter(*filter_list).all()
+
+            if not task_info:
+                return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': 'No data to update'}
+
+            # 处理返回的数据
+            results = commons.query_to_dict(task_info)
+            info_value = []
+            for i, x in enumerate(results):
+                info = list(x.values())
+                index = [str(i)]
+                info_value.append(index + info)
+
+            # import xlwt
+            file = Workbook(encoding='utf-8')
+            # 指定file以utf-8的格式打开
+            table = file.add_sheet('data')
+            header = ['序号', '班级', '姓名', '学号', '检测时间', '检测结果']
+            for a in range(6):
+                table.write(0, a, header[a])
+            for i, p in enumerate(info_value):
+                # 将数据写入文件,i是enumerate()函数返回的序号数
+                for j, q in enumerate(p):
+                    table.write(i + 1, j, q)
+            file.save('data.xlsx')
+            file_path = os.getcwd()
+            return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'file_path': file_path, 'file_name': 'data.xlsx'}
+
+        except Exception as e:
+            loggings.exception(1, e)
+            return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'error': str(e)}
+        finally:
+            db.session.close()
+
+    # 删除信息记录
     @classmethod
     def test_delete(cls, **kwargs):
         filter_list = []
@@ -40,6 +98,7 @@ class TestInfoService(TestInfoController):
 
         # 列表查询
 
+    # 查询信息记录
     @classmethod
     def joint_query(cls, **kwargs):
         try:
@@ -106,3 +165,5 @@ class TestInfoService(TestInfoController):
     def infosubmit(cls, **kwargs):
 
         pass
+
+
