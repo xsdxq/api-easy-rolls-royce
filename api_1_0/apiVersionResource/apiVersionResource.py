@@ -12,5 +12,6 @@ class ApiVersionResource(Resource):
     def get(self):
         back_data = {
             'version': '1.0'
+            'test_message'
         }
         return jsonify(code=RET.OK, message='OK', data=back_data)    
