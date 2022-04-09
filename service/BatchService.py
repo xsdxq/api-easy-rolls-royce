@@ -28,7 +28,7 @@ class BatchService(BatchController):
             for x in results:
                 batch_info.append(x['Year'] + "年" + "第" + x['Term'] + "学期第" + x['Week'] + "周")
 
-            return batch_info
+            return {'code': RET.OK, 'info': batch_info}
 
         except Exception as e:
             # loggings.exception(1, e)

@@ -140,8 +140,10 @@ class TestInfoService(TestInfoController):
             results = commons.query_to_dict(task_info)
             for x in results:
                 batch_info = BatchService.get_info(x['BatchID'])
-                print(batch_info)
-                x['batch_info'] = batch_info[0]
+                if batch_info['code'] == RET.OK:
+                    x['batch_info'] = batch_info['info'][0]
+                else:
+                    return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': '批次号不存在！'}
             return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'totalCount': count, 'totalPage': pages,
                     'data': results}
 
