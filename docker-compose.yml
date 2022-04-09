@@ -4,19 +4,19 @@ services:
      stdin_open: true
      tty: true
      build: .
-     image: api
-     container_name: api
+     image: devops-test2
+     container_name:  api.easy-rolls-royce.com
      restart: always
      volumes:
-       - /docker/deploy/your project:/deploy/app/your project
-       - /docker/deploy/your project/logs:/deploy/app/your project/logs/
-       - /docker/deploy/your project/gunicorn_log:/deploy/app/your project/gunicorn_log
+       - /docker/deploy/api.easy-rolls-royce.com:/deploy/app/api.easy-rolls-royce.com
+       - /docker/deploy/api.easy-rolls-royce.com/logs:/deploy/app/api.easy-rolls-royce.com/logs/
+       - /docker/deploy/api.easy-rolls-royce.com/gunicorn_log:/deploy/app/api.easy-rolls-royce.com/gunicorn_log
      ports:
-       - "5000:5000"
+       - "5200:5200"
      command:
        - /bin/bash
        - -c
        - |
-          cd your project
+          cd api.easy-rolls-royce.com
           python3 gunicorn.py start
           /bin/bash
