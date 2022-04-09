@@ -11,7 +11,7 @@ import sys
 
 def start():
     cmd = 'source /deploy/app/venv/bin/activate;' \
-          'cd /deploy/your project;' \
+          'cd /deploy/app/api.easy-rolls-royce.com;' \
           'gunicorn -c deploy/gunicorn.conf manage:app -D'
     os.system(cmd)
 
