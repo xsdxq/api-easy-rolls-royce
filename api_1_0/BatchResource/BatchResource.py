@@ -72,7 +72,7 @@ class BatchResource(Resource):
         
         kwargs = parser.parse_args()
         kwargs = commons.put_remove_none(**kwargs)
-        res = BatchController.update(**kwargs)
+        res = BatchController.update_check(**kwargs)
 
         return jsonify(code=res['code'], message=res['message'], data=res['data'])
 
