@@ -99,6 +99,9 @@ class TestInfoController(TestInfo):
     def delete(cls, **kwargs):
         try:
             filter_list = [cls.IsDelete == 0]
+
+            filter_list = []
+            filter_list.append(cls.IsDelete == 0)
             if kwargs.get('RecordID'):
                 primary_key_list = []
                 for primary_key in str(kwargs.get('RecordID')).replace(' ', '').split(','):
