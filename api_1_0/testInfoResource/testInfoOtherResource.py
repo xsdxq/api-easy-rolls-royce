@@ -13,7 +13,10 @@ class TestInfoOtherResource(Resource):
 	@classmethod
 	def joint_query(cls):
 		parser = reqparse.RequestParser()
-		parser.add_argument('UserID', type=str, location='args', required=False, help='UserID参数类型不正确或缺失')
+		parser.add_argument('BatchID', location='form', required=False, help='BatchID参数类型不正确或缺失')
+		parser.add_argument('StudentID', location='form', required=False, help='StudentID参数类型不正确或缺失')
+		parser.add_argument('Class', location='form', required=False, help='Class参数类型不正确或缺失')
+		parser.add_argument('Name', location='form', required=False, help='Name参数类型不正确或缺失')
 
 		parser.add_argument('IsDelete', type=int, location='args', required=False, help='IsDelete参数类型不正确或缺失')
 		parser.add_argument('CreateTime', type=str, location='args', required=False, help='CreateTime参数类型不正确或缺失')
