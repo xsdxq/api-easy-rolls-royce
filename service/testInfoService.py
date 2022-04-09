@@ -16,6 +16,14 @@ class TestInfoService(TestInfoController):
         try:
             filter_list = []
             filter_list.append(cls.IsDelete == 0)
+            if kwargs.get('Class'):
+                filter_list.append(cls.Class == kwargs.get('Class'))
+            if kwargs.get('Name'):
+                filter_list.append(cls.Name == kwargs.get('Name'))
+            if kwargs.get('BatchID'):
+                filter_list.append(cls.BatchID == kwargs.get('BatchID'))
+            if kwargs.get('StudentID'):
+                filter_list.append(cls.StudentID == kwargs.get('StudentID'))
 
             if kwargs.get('IsDelete'):
                 filter_list.append(cls.IsDelete == kwargs.get('IsDelete'))
