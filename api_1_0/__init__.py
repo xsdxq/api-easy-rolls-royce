@@ -5,6 +5,7 @@ from .apiVersionResource import apiversion_blueprint
 from .BatchResource import batch_blueprint
 from .adminResource import admin_blueprint
 from .testInfoResource import testinfo_blueprint
+from .weixinappResource import weixinapp_blueprint
 
 
 def init_router(app):
@@ -22,4 +23,6 @@ def init_router(app):
     # testInfo blueprint register
     from api_1_0.testInfoResource import testinfo_blueprint
     app.register_blueprint(testinfo_blueprint, url_prefix="/api_1_0")
-    
+
+    from api_1_0.weixinappResource import weixinapp_blueprint
+    app.register_blueprint(weixinapp_blueprint, url_prefix="/api_1_0")

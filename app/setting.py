@@ -21,6 +21,9 @@ class Settings(object):
     def get_setting(cls, runMode):
         cls.CONFIG.read(os.path.join(CONFIG_DIR, runMode + '_config.conf'), encoding='utf-8')
 
+        # cls.UPLOADS_DEFAULT_DEST = "F:\Project\Python\images_api.easy-rolls-royce.com"
+        cls.UPLOADS_DEFAULT_DEST = os.sep.join(['','deploy', 'app', 'images_api.easy-rolls-royce.com'])
+
         # 秘钥
         cls.SECRET_KEY = cls.CONFIG['BASIC']['secret_key']
         cls.PUBLIC_KEY = cls.CONFIG['RSA']['public_key']
