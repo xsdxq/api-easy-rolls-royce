@@ -25,7 +25,7 @@ class RET:
     THIRDERR = "5002"
     IOERR = "5003"
     UNKOWNERR = "5004"
-
+    IMAGEERR="6001"
 
 error_map_CN = {
     RET.OK: u"成功",

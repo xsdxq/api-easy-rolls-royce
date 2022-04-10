@@ -29,6 +29,7 @@ class TestInfoController(TestInfo):
                 StudentID=kwargs.get('StudentID'),
                 Class=kwargs.get('Class'),
                 Name=kwargs.get('Name'),
+                NameInImage=kwargs.get('NameInImage'),
                 TestTime=kwargs.get('TestTime'),
                 ImageUrl=kwargs.get('ImageUrl'),
                 TestResults=kwargs.get('TestResults'),

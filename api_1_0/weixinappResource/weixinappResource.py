@@ -1,20 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import datetime
-import hashlib
-import os
-import random
-import string
-import time
-
-# from PIL import Image
 from werkzeug.datastructures import FileStorage
-from app import photos
-from flask import jsonify, current_app
+from flask import jsonify
 from flask_restful import Resource, reqparse
-from utils import commons, loggings
-from utils.response_code import RET
+from utils import commons
+
+from service.weinappService import WeixinappService
 
 
 class WeixinappResource(Resource):
@@ -32,40 +24,6 @@ class WeixinappResource(Resource):
         kwargs = parser.parse_args()
         kwargs = commons.put_remove_none(**kwargs)
 
-        filename = kwargs.get("Image").filename
-        # 去掉文件后缀末尾双引号
-        ext = filename.rsplit('.', 1)[1].replace("\"", "").replace("\"", "")
-
-        # 对图片保存名称唯一
-        time_str = ''.join(random.sample(string.ascii_letters + string.digits, 8))
-        filename = str(int(time.time())) + time_str
-
-        # 上传图片
-        try:
-            file_name = photos.save(kwargs.get("Image"), folder=None, name=filename + '.' + ext)
-        except Exception as e:
-            current_app.logger.error(e)
-            return jsonify(code=RET.THIRDERR, message="上传图片失败，只支持jpg,png类型")
-
-        # 获得保存后的图片路径
-        try:
-            image_url = photos.url(file_name)
-            base_name = photos.get_basename(file_name).rsplit('.', 1)[0]
-
-            # c_url = create_thumbnail(base_name, ext)
-        except Exception as e:
-            image_url = None
-            base_name = None
-            current_app.logger.error(e)
-
-        # res = TestInfoController.add(**kwargs)
-        res = {
-            "code": 2000,
-            "message": " ",
-            "data": {
-                "image_url": image_url,
-                "base_name": base_name,
-            }
-        }
+        res = WeixinappService.infomation_collection(**kwargs)
 
         return jsonify(code=res['code'], message=res['message'], data=res['data'])

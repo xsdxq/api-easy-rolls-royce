@@ -22,7 +22,11 @@ class Settings(object):
         cls.CONFIG.read(os.path.join(CONFIG_DIR, runMode + '_config.conf'), encoding='utf-8')
 
         # cls.UPLOADS_DEFAULT_DEST = "F:\Project\Python\images_api.easy-rolls-royce.com"
-        cls.UPLOADS_DEFAULT_DEST = os.sep.join(['','deploy', 'app', 'images_api.easy-rolls-royce.com'])
+        # cls.PICTURE_DEAFULT_DEST_PREFIX = "F:\Project\Python\images_api.easy-rolls-royce.com\photos"
+
+        cls.UPLOADS_DEFAULT_DEST = os.sep.join(['', 'deploy', 'app', 'images_api.easy-rolls-royce.com'])
+        cls.PICTURE_DEAFULT_DEST_PREFIX = os.sep.join(
+            ['', 'deploy', 'app', 'images_api.easy-rolls-royce.com', 'photos'])
 
         # 秘钥
         cls.SECRET_KEY = cls.CONFIG['BASIC']['secret_key']
@@ -56,4 +60,3 @@ class Settings(object):
         cls.TOKEN_EXPIRES = int(cls.CONFIG['BASIC']['token_expires'])
 
         return cls
-
