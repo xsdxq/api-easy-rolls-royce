@@ -17,7 +17,6 @@ from utils import commons, loggings
 from utils.response_code import RET
 
 
-
 class WeixinappResource(Resource):
     # 小程序端信息采集+图片上传
     @classmethod
@@ -41,19 +40,32 @@ class WeixinappResource(Resource):
         time_str = ''.join(random.sample(string.ascii_letters + string.digits, 8))
         filename = str(int(time.time())) + time_str
 
+        # 上传图片
         try:
             file_name = photos.save(kwargs.get("Image"), folder=None, name=filename + '.' + ext)
         except Exception as e:
             current_app.logger.error(e)
             return jsonify(code=RET.THIRDERR, message="上传图片失败，只支持jpg,png类型")
 
+        # 获得保存后的图片路径
+        try:
+            image_url = photos.url(file_name)
+            base_name = photos.get_basename(file_name).rsplit('.', 1)[0]
+
+            # c_url = create_thumbnail(base_name, ext)
+        except Exception as e:
+            image_url = None
+            base_name = None
+            current_app.logger.error(e)
+
         # res = TestInfoController.add(**kwargs)
         res = {
             "code": 2000,
             "message": " ",
-            "data": ""
+            "data": {
+                "image_url": image_url,
+                "base_name": base_name,
+            }
         }
 
         return jsonify(code=res['code'], message=res['message'], data=res['data'])
-
-
