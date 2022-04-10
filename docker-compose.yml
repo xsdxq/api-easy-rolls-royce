@@ -11,6 +11,7 @@ services:
        - /docker/deploy/api.easy-rolls-royce.com:/deploy/app/api.easy-rolls-royce.com
        - /docker/deploy/api.easy-rolls-royce.com/logs:/deploy/app/api.easy-rolls-royce.com/logs/
        - /docker/deploy/api.easy-rolls-royce.com/gunicorn_log:/deploy/app/api.easy-rolls-royce.com/gunicorn_log
+       - /docker/deploy/images_api.easy-rolls-royce.com/:/deploy/app/images_api.easy-rolls-royce.com/
      ports:
        - "5200:5200"
      command:
