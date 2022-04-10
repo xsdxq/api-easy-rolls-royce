@@ -35,7 +35,7 @@ class WeixinappService(TestInfoController):
             file_name = photos.save(kwargs.get("Image"), folder=None, name=filename + '.' + ext)
         except Exception as e:
             current_app.logger.error(e)
-            return {'code': RET.THIRDERR, 'message': "上传图片失败，只支持jpg,png类型", 'error': '上传图片失败，只支持jpg,png类型'}
+            return {'code': RET.THIRDERR, 'message': "上传图片失败，只支持jpg,png类型", 'data': {'error': str(e)}}
 
         # 获得保存后的图片路径
         try:
@@ -45,7 +45,7 @@ class WeixinappService(TestInfoController):
             # c_url = create_thumbnail(base_name, ext)
         except Exception as e:
             current_app.logger.error(e)
-            return {'code': RET.THIRDERR, 'message': "获取图片路径失败！", 'error': "获取图片路径失败"}
+            return {'code': RET.THIRDERR, 'message': "获取图片路径失败！", 'data': {'error': str(e)}}
 
         # 图像识别
         from utils.ImageIdentify import ImageIdentify
