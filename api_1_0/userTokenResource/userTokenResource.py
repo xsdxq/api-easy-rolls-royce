@@ -3,7 +3,6 @@
 
 from flask_restful import Resource, reqparse
 from flask import jsonify
-from flasgger import swag_from
 from controller.userTokenController import UserTokenController
 from utils import commons
 from utils.response_code import RET
@@ -12,7 +11,6 @@ from utils.response_code import RET
 class UserTokenResource(Resource):
 
     # get
-    @swag_from('ymls/userToken_get.yml')
     def get(self, UserID=None):
         if UserID:
             kwargs = {
@@ -47,7 +45,6 @@ class UserTokenResource(Resource):
             return jsonify(code=res['code'], message=res['message'], error=res['error']) 
             
     # delete
-    @swag_from('ymls/userToken_delete.yml')
     def delete(self, UserID=None):
         if UserID:
             kwargs = {
@@ -76,7 +73,6 @@ class UserTokenResource(Resource):
             return jsonify(code=res['code'], message=res['message'], error=res['error'])
 
     # put
-    @swag_from('ymls/userToken_put.yml')
     def put(self, UserID):
         if not UserID:
             return jsonify(code=RET.NODATA, message='primary key missed', error='primary key missed')
@@ -101,7 +97,6 @@ class UserTokenResource(Resource):
             return jsonify(code=res['code'], message=res['message'], error=res['error'])
 
     # add
-    @swag_from('ymls/userToken_post.yml')
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('UserTokenList', type=str, location='form', required=False, help='UserTokenList参数类型不正确或缺失')
