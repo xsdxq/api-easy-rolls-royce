@@ -8,9 +8,10 @@ import random
 import string
 import time
 
-from flask import current_app
+from flask import current_app, json
 
 from app import photos
+from utils.loggings import loggings
 from utils.response_code import RET, error_map_EN
 
 # from PIL import Image
@@ -22,6 +23,63 @@ class WeixinappService(TestInfoController):
 
     @classmethod
     def infomation_collection(cls, **kwargs):
+
+        # A=kwargs.get('InfoSet')
+        # print(A,type(A))
+        # B=json.loads(A)
+        # print(B,type(B))
+        # C=json.loads(B)
+        # print(C,type(C))
+        info_set = json.loads(kwargs.get('InfoSet'))
+        info_set = json.loads(info_set)
+        print(info_set, type(info_set))
+
+
+        # 图像识别
+        from utils.ImageIdentify import ImageIdentify
+        local_image_url = os.path.join(current_app.config['PICTURE_DEAFULT_DEST_PREFIX'], info_set['FileName'])
+        Identify_result = ImageIdentify(local_image_url)
+        # 识别成功
+        if Identify_result['code'] == RET.OK:
+            data = Identify_result['data']
+            print(data)
+            info_set.update(**{
+                'TestTime': data['time'],
+                'TestResults': data['result'],
+                'NameInImage': data['name'],
+            })
+
+            # 信息入库
+            # 1.检查该批次是否存在该学生信息
+            try:
+                get_res = TestInfoController.get(**{
+                    "BatchID": info_set['BatchID'],
+                    "StudentID": info_set['StudentID'],
+                })
+
+                if get_res['code'] == RET.OK:
+                    if get_res['totalCount'] > 0:
+                        info_set.upudate(**{
+                            'RecordID': get_res['data'][0]['RecordID'],
+                        })
+                        update_res = TestInfoController.update(**info_set)
+
+                    if get_res['totalCount'] == 0:
+                        add_res = TestInfoController.add(**kwargs)
+
+            except Exception as e:
+                loggings.exception(1, e)
+                return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'data': {'error': str(e)}}
+
+            return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': data}
+
+        # 失败
+        else:
+            return Identify_result
+
+    # 图片上传,只上传，信息不入库
+    @classmethod
+    def Pic_upload(cls, **kwargs):
         filename = kwargs.get("Image").filename
         # 去掉文件后缀末尾双引号
         ext = filename.rsplit('.', 1)[1].replace("\"", "").replace("\"", "")
@@ -47,35 +105,14 @@ class WeixinappService(TestInfoController):
             current_app.logger.error(e)
             return {'code': RET.THIRDERR, 'message': "获取图片路径失败！", 'data': {'error': str(e)}}
 
-        # 图像识别
-        from utils.ImageIdentify import ImageIdentify
-        local_image_url = os.path.join(current_app.config['PICTURE_DEAFULT_DEST_PREFIX'], filename + '.' + ext)
-        Identify_result = ImageIdentify(local_image_url)
-        # 识别成功
-        if Identify_result['code'] == RET.OK:
-            data = Identify_result['data']
-            print(data)
-            print(kwargs)
-            kwargs.pop('Image')
-            kwargs.update(**{
-                'TestTime': data['time'],
-                'TestResults': data['result'],
-                'NameInImage': data['name'],
-                'ImageUrl': image_url,
-            })
+        FileName = filename + '.' + ext
+        kwargs.pop('Image')
+        kwargs.update(**{
+            "ImageUrl": image_url,
+            "FileName": FileName,
+        })
+        print(kwargs)
 
-            # 识别信息、图片url入库
-            add_res = TestInfoController.add(**kwargs)
-            if add_res['code'] != RET.OK:
-                return add_res
+        data = json.dumps(kwargs)
 
-            return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': data}
-
-
-
-
-
-
-        # 失败
-        else:
-            return Identify_result
+        return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': data}

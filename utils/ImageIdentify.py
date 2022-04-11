@@ -37,29 +37,33 @@ def ImageIdentify(img_path):
         if len(re_name) > 0:
             name = re_name[0]
         else:
-            name = ""
+            name = None
 
         re_time = re.findall(pattern_time, retxt)
         if len(re_time) > 0:
             time = re_time[0]
         else:
-            time = ""
+            time = None
 
         re_check_result = re.findall(pattern_result, retxt)
         if len(re_check_result) > 0:
             check_result = re_check_result[0]
         else:
-            check_result = ""
+            check_result = None
 
-        # 识别结果
-        re_data = {
-            "name": name,
-            "time": time,
-            "result": check_result,
-        }
+        if name and time and check_result !=None:
 
-        return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': re_data}
+            # 识别结果
+            re_data = {
+                "name": name,
+                "time": time,
+                "result": check_result,
+            }
 
+            return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': re_data}
+
+        else:
+            return {'code': RET.IMAGEERR, 'message': "图像识别失败，可能上传了非核酸检测结果截图", 'data': "图像识别失败，可能上传了非核酸检测结果截图"}
 
     except Exception as e:
-        return {'code': RET.IMAGEERR, 'message': "图像识别失败，请上传北京健康宝/支付宝健康码截图", 'error': "图像识别失败，请上传北京健康宝/支付宝健康码截图"}
+        return {'code': RET.IMAGEERR, 'message': "图像识别失败，请上传北京健康宝/支付宝健康码截图", 'data': "图像识别失败，请上传北京健康宝/支付宝健康码截图"}
