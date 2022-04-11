@@ -65,7 +65,7 @@ class WeixinappService(TestInfoController):
                         update_res = TestInfoController.update(**info_set)
 
                     if get_res['totalCount'] == 0:
-                        add_res = TestInfoController.add(**kwargs)
+                        add_res = TestInfoController.add(**info_set)
 
             except Exception as e:
                 loggings.exception(1, e)
