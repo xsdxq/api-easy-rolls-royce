@@ -26,3 +26,6 @@ def init_router(app):
 
     from api_1_0.weixinappResource import weixinapp_blueprint
     app.register_blueprint(weixinapp_blueprint, url_prefix="/api_1_0")
+
+    from api_1_0.userTokenResource import usertoken_blueprint
+    app.register_blueprint(usertoken_blueprint, url_prefix="/api_1_0")

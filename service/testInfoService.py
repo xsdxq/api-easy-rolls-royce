@@ -109,8 +109,6 @@ class TestInfoService(TestInfoController):
                 studentID = kwargs.get('StudentID')
                 filter_list.append(cls.StudentID.like('%' + studentID + '%'))
 
-            if kwargs.get('IsDelete'):
-                filter_list.append(cls.IsDelete == kwargs.get('IsDelete'))
             if kwargs.get('CreateTime'):
                 filter_list.append(cls.CreateTime == kwargs.get('CreateTime'))
 
@@ -143,7 +141,7 @@ class TestInfoService(TestInfoController):
                 if batch_info['code'] == RET.OK:
                     x['batch_info'] = batch_info['info'][0]
                 else:
-                    return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': '批次号不存在！'}
+                    x['batch_info'] = ''
             return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'totalCount': count, 'totalPage': pages,
                     'data': results}
 
