@@ -105,6 +105,4 @@ class WeixinappService(TestInfoController):
             "FileName": FileName,
         })
 
-        data = str(kwargs)
-
-        return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': data}
+        return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': kwargs}
