@@ -25,18 +25,16 @@ class WeixinappService(TestInfoController):
     @classmethod
     def infomation_collection(cls, **kwargs):
 
-        info_set = eval(kwargs.get('InfoSet'))
-
         # 图像识别
         from utils.ImageIdentify import ImageIdentify
-        local_image_url = os.path.join(current_app.config['PICTURE_DEAFULT_DEST_PREFIX'], info_set['FileName'])
+        local_image_url = os.path.join(current_app.config['PICTURE_DEAFULT_DEST_PREFIX'], kwargs.get('FileName'))
         Identify_result = ImageIdentify(local_image_url)
         # 识别成功
         if Identify_result['code'] == RET.OK:
             data = Identify_result['data']
 
-            info_set.pop('FileName')
-            info_set.update(**{
+            kwargs.pop('FileName')
+            kwargs.update(**{
                 'TestTime': data['time'],
                 'TestResults': data['result'],
                 'NameInImage': data['name'],
@@ -46,21 +44,21 @@ class WeixinappService(TestInfoController):
             # 1.检查该批次是否存在该学生信息
             try:
                 get_res = TestInfoController.get(**{
-                    "BatchID": info_set['BatchID'],
-                    "StudentID": info_set['StudentID'],
+                    "BatchID": kwargs['BatchID'],
+                    "StudentID": kwargs['StudentID'],
                 })
 
                 if get_res['code'] == RET.OK:
                     if get_res['totalCount'] > 0:
-                        info_set.update(**{
+                        kwargs.update(**{
                             'RecordID': get_res['data'][0]['RecordID'],
                         })
-                        print(info_set)
-                        update_res = TestInfoController.update(**info_set)
+                        print(kwargs)
+                        update_res = TestInfoController.update(**kwargs)
 
                     if get_res['totalCount'] == 0:
-                        print(info_set)
-                        add_res = TestInfoController.add(**info_set)
+                        print(kwargs)
+                        add_res = TestInfoController.add(**kwargs)
 
             except Exception as e:
                 loggings.exception(1, e)
@@ -108,6 +106,5 @@ class WeixinappService(TestInfoController):
         })
 
         data = str(kwargs)
-        print(data, type(data))
 
         return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': data}

@@ -16,7 +16,13 @@ class WeixinappResource(Resource):
     @classmethod
     def infomation_collection(cls):
         parser = reqparse.RequestParser()
-        parser.add_argument('InfoSet', location='form', required=True, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('BatchID', location='form', required=True, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('StudentID', location='form', required=True, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('Name', location='form', required=True, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('Class', location='form', required=True, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('FileName', location='form', required=True, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('ImageUrl', location='form', required=True, help='InfoSet参数类型不正确或缺失')
+
 
         try:
             kwargs = parser.parse_args()
