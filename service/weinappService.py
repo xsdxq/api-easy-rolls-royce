@@ -18,6 +18,7 @@ from utils.response_code import RET, error_map_EN
 # from PIL import Image
 
 from controller.testInfoController import TestInfoController
+from controller.BatchController import BatchController
 
 
 class WeixinappService(TestInfoController):
@@ -43,8 +44,17 @@ class WeixinappService(TestInfoController):
             # 信息入库
             # 1.检查该批次是否存在该学生信息
             try:
+                res_get_BatchID = BatchController.get(**{
+                    'IsCurrent': 1
+                })
+                if res_get_BatchID['code'] == RET.OK:
+                    batch_id = res_get_BatchID['data'][0]['BatchID']
+                    print("batch_id:", batch_id)
+                else:
+                    batch_id = None
+
                 get_res = TestInfoController.get(**{
-                    "BatchID": kwargs['BatchID'],
+                    "BatchID": batch_id,
                     "StudentID": kwargs['StudentID'],
                 })
 
