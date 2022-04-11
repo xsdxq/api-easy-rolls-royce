@@ -10,6 +10,7 @@ import time
 
 from flask import current_app, json
 
+from utils import commons
 from app import photos
 from utils.loggings import loggings
 from utils.response_code import RET, error_map_EN
@@ -24,16 +25,7 @@ class WeixinappService(TestInfoController):
     @classmethod
     def infomation_collection(cls, **kwargs):
 
-        # A=kwargs.get('InfoSet')
-        # print(A,type(A))
-        # B=json.loads(A)
-        # print(B,type(B))
-        # C=json.loads(B)
-        # print(C,type(C))
-        info_set = json.loads(kwargs.get('InfoSet'))
-        info_set = json.loads(info_set)
-        print(info_set, type(info_set))
-
+        info_set = eval(kwargs.get('InfoSet'))
 
         # 图像识别
         from utils.ImageIdentify import ImageIdentify
@@ -42,7 +34,8 @@ class WeixinappService(TestInfoController):
         # 识别成功
         if Identify_result['code'] == RET.OK:
             data = Identify_result['data']
-            print(data)
+
+            info_set.pop('FileName')
             info_set.update(**{
                 'TestTime': data['time'],
                 'TestResults': data['result'],
@@ -59,12 +52,14 @@ class WeixinappService(TestInfoController):
 
                 if get_res['code'] == RET.OK:
                     if get_res['totalCount'] > 0:
-                        info_set.upudate(**{
+                        info_set.update(**{
                             'RecordID': get_res['data'][0]['RecordID'],
                         })
+                        print(info_set)
                         update_res = TestInfoController.update(**info_set)
 
                     if get_res['totalCount'] == 0:
+                        print(info_set)
                         add_res = TestInfoController.add(**info_set)
 
             except Exception as e:
@@ -111,8 +106,8 @@ class WeixinappService(TestInfoController):
             "ImageUrl": image_url,
             "FileName": FileName,
         })
-        print(kwargs)
 
-        data = json.dumps(kwargs)
+        data = str(kwargs)
+        print(data, type(data))
 
         return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': data}
