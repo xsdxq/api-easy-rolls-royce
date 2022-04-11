@@ -32,10 +32,6 @@ class WeixinappResource(Resource):
     @classmethod
     def Pic_upload(cls):
         parser = reqparse.RequestParser()
-        parser.add_argument('BatchID', location='form', required=True, help='BatchID参数类型不正确或缺失')
-        parser.add_argument('StudentID', location='form', required=True, help='StudentID参数类型不正确或缺失')
-        parser.add_argument('Class', location='form', required=True, help='Class参数类型不正确或缺失')
-        parser.add_argument('Name', location='form', required=True, help='Name参数类型不正确或缺失')
         parser.add_argument("Image", type=FileStorage, location="files", required=True, help="Image参数类型不正确或缺失")
 
         try:
