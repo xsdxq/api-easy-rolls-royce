@@ -5,7 +5,7 @@ import datetime
 import os
 
 from xlwt import Workbook
-
+from sqlalchemy import and_
 from controller.testInfoController import TestInfoController
 from service.BatchService import BatchService
 from models.testInfoModel import TestInfo
@@ -93,8 +93,7 @@ class TestInfoService(TestInfoController):
     @classmethod
     def joint_query(cls, **kwargs):
         try:
-            filter_list = []
-            filter_list.append(cls.IsDelete == 0)
+            filter_list = [cls.IsDelete == 0]
             # 模糊查询
             if kwargs.get('Class'):
                 class_text = kwargs.get('Class')
@@ -115,6 +114,7 @@ class TestInfoService(TestInfoController):
             page = int(kwargs.get('Page', 1))
             size = int(kwargs.get('Size', 10))
 
+            from models.BatchModel import Batch
             task_info = db.session.query(
                 TestInfo.RecordID,
                 TestInfo.StudentID,
@@ -125,14 +125,18 @@ class TestInfoService(TestInfoController):
                 TestInfo.TestResults,
                 TestInfo.ImageUrl,
                 TestInfo.CreateTime,
-            ).filter(*filter_list)
+                Batch.Year,
+                Batch.Term,
+                Batch.Week
+            ).filter(*filter_list)\
+             .join(Batch, and_(Batch.BatchID == cls.BatchID, Batch.IsDelete == 0))
 
             count = task_info.count()
             pages = math.ceil(count / size)
             task_info = task_info.limit(size).offset((page - 1) * size).all()
 
-            if not task_info:
-                return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': 'No data to update'}
+            # if not task_info:
+            #     return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': 'No data to update'}
 
             # 处理返回的数据
             results = commons.query_to_dict(task_info)
