@@ -13,7 +13,7 @@ api.add_resource(TestInfoResource, '/testInfo/<RecordID>', '/testInfo', endpoint
 
 
 # get_excel
-@testinfo_blueprint.route('/test/get_excel', methods=['POST'], endpoint='get_excel')
+@testinfo_blueprint.route('/test/get_excel', methods=['GET'], endpoint='get_excel')
 def Test_query():
     return TestInfoOtherResource.get_excel()
 
