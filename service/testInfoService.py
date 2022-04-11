@@ -51,9 +51,9 @@ class TestInfoService(TestInfoController):
                 # 将数据写入文件,i是enumerate()函数返回的序号数
                 for j, q in enumerate(p):
                     table.write(i + 1, j, q)
-            file.save('data.xlsx')
+            file.save('data.xls')
             file_path = os.getcwd()
-            return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'file_path': file_path, 'file_name': 'data.xlsx'}
+            return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'file_path': file_path, 'file_name': 'data.xls'}
 
         except Exception as e:
             loggings.exception(1, e)
