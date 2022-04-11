@@ -33,14 +33,13 @@ class TestInfoOtherResource(Resource):
             if res['code'] == RET.OK:
                 file_path = res['file_path']
                 filename = res['file_name']
-                response = make_response(send_from_directory(file_path, filename, as_attachment=True))
-                response.headers["Content-Disposition"] = "attachment; filename={}".format(
-                    filename.encode().decode('latin-1'))
-                return response
+                # response = make_response(send_from_directory(file_path, filename, as_attachment=True))
+                # response.headers["Content-Disposition"] = "attachment; filename={}".format(
+                #     filename.encode().decode('latin-1'))
+                # return response
+                return send_from_directory(file_path, filename, as_attachment=True)
             else:
                 return jsonify(code=res['code'], message=res['message'], error=res['error'])
-
-
 
         except Exception as e:
             loggings.exception(1, e)
