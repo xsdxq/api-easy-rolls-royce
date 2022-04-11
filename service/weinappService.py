@@ -58,6 +58,9 @@ class WeixinappService(TestInfoController):
                     "StudentID": kwargs['StudentID'],
                 })
 
+                kwargs.update(**{
+                    "BatchID": batch_id
+                })
                 if get_res['code'] == RET.OK:
                     if get_res['totalCount'] > 0:
                         kwargs.update(**{
