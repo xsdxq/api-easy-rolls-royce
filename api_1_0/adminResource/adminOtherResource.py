@@ -3,6 +3,8 @@
 
 from flask_restful import Resource, reqparse
 from flask import jsonify
+
+from service import adminService
 from service.adminService import AdminService
 from utils import commons
 from utils.loggings import loggings
@@ -26,3 +28,20 @@ class AdminOtherResource(Resource):
 		if result['code'] != '2000':
 			return jsonify(code=result['code'], message=result['message'], error=result['error'])
 		return jsonify(code=RET.OK, message=result['message'], data=result['data'])
+
+
+	#管理员修改密码
+	@classmethod
+	def admin_reset(cls):
+		parser = reqparse.RequestParser()
+		parser.add_argument('AdminID', type=str, location='form', required=True, help='AdminID参数类型不正确或缺失')
+		parser.add_argument('AdminPassword', type=str, location='form', required=True, help='AdminPassword参数类型不正确或缺失')
+		parser.add_argument('NewPassword', type=str, location='form', required=True, help='NewPassword参数类型不正确或缺失')
+
+		kwargs = parser.parse_args()
+		kwargs = commons.put_remove_none(**kwargs)
+		result = AdminService.admin_reset(**kwargs)
+
+		if result['code'] != '2000':
+			return jsonify(code=result['code'], message=result['message'], error=result['error'])
+		return jsonify(code=RET.OK, message=result['message'])

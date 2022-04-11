@@ -202,3 +202,27 @@ class AdminController(Admin):
             return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'data': {'error': str(e)}}
         finally:
             db.session.close()
+
+
+    # put
+    @classmethod
+    def put(cls, **kwargs):
+        try:
+
+            res = db.session.query(cls).filter(
+                cls.AdminID == kwargs.get('AdminID'),
+                cls.IsDelete == 0
+            ).with_for_update().update(kwargs)
+
+            if res < 1:
+                return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': 'No data to update'}
+            db.session.commit()
+
+            return {'code': RET.OK, 'message': error_map_EN[RET.OK]}
+
+        except Exception as e:
+            db.session.rollback()
+            loggings.exception(1, e)
+            return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'error': str(e)}
+        finally:
+            db.session.close()

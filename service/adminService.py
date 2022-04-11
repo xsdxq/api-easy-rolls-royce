@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-
+from controller import adminController
 from controller.adminController import AdminController
 import datetime
 
@@ -8,7 +8,7 @@ from flask import current_app, request
 from app import db
 from controller.userTokenController import UserTokenController
 from models.userTokenModel import UserToken
-from utils import commons
+from utils import commons, loggings
 from utils.response_code import RET, error_map_EN
 from utils.rsa_encryption_decryption import RSAEncryptionDecryption
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -100,3 +100,31 @@ class AdminService(AdminController):
         }
         # return jsonify(code=RET.OK, message='登录成功', data=data_dict)
         return {'code': RET.OK, 'message': '登录成功', 'data': data_dict}
+
+     # 管理员修改密码
+    @classmethod
+    def admin_reset(cls, **kwargs):
+        try:
+            filter_list = []
+            filter_list.append(cls.IsDelete == 0)
+            filter_list.append(cls.AdminID == kwargs.get('AdminID'))
+
+            admin_info = db.session.query(cls).filter(*filter_list).first()
+
+        except Exception as e:
+            loggings.exception(1, e)
+            return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'error': str(e)}
+
+        old_password = kwargs.get('AdminPassword')
+        new_password = kwargs.get('NewPassword')
+        rsa = RSAEncryptionDecryption()
+        pass_word_text = rsa.decrypt(old_password)
+        new_word_text = rsa.decrypt(new_password)
+        print(pass_word_text)
+        if admin_info.check_password(pass_word_text):
+            kwargs['AdminPassword'] = generate_password_hash(new_word_text)
+            del kwargs['NewPassword']
+            return AdminController.put(**kwargs)
+        else:
+            return {'code': RET.NODATA, 'message': '无此账号或原密码错误', 'error': '此账号或原密码错误'}
+            # return jsonify(code=RET.NODATA, message='无此账号或原密码错误', error='此账号或原密码错误')
