@@ -16,3 +16,4 @@ class Batch(db.Model):
     Week = db.Column(db.String(5, 'utf8mb4_0900_ai_ci'), info='周次')
     IsCurrent = db.Column(db.Integer, info='是否最新周次：1-是；0-否')
     IsDelete = db.Column(db.Integer,server_default=db.FetchedValue(), info='是否删除:1-是；0-否')
+    CreateTime = db.Column(db.DateTime, server_default=db.FetchedValue(), info='创建时间')
