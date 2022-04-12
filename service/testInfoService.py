@@ -18,9 +18,9 @@ class TestInfoService(TestInfoController):
 
     # 生成excel
     @classmethod
-    def get_excel(cls, kwargs):
+    def get_excel(cls, **kwargs):
         try:
-            filter_list = [cls.IsDelete == 0, cls.BatchID == kwargs]
+            filter_list = [cls.IsDelete == 0, cls.BatchID == kwargs.get('BatchID')]
             task_info = db.session.query(
                 TestInfo.Class,
                 TestInfo.Name,
@@ -29,8 +29,8 @@ class TestInfoService(TestInfoController):
                 TestInfo.TestResults,
             ).filter(*filter_list).all()
 
-            if not task_info:
-                return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': 'No data to update'}
+            # if not task_info:
+            #     return {'code': RET.NODATA, 'message': error_map_EN[RET.NODATA], 'error': 'No data to update'}
 
             # 处理返回的数据
             results = commons.query_to_dict(task_info)
