@@ -33,25 +33,27 @@ def ImageIdentify(img_path):
             retxt = retxt + text
 
         re_name = re.findall(pattern_name, retxt)
-        print(re_name)
+        print("re_name", re_name)
         if len(re_name) > 0:
             name = re_name[0]
         else:
             name = None
 
         re_time = re.findall(pattern_time, retxt)
+        print("re_time", re_time)
         if len(re_time) > 0:
             time = re_time[0]
         else:
             time = None
 
         re_check_result = re.findall(pattern_result, retxt)
+        print("check_result", re_check_result)
         if len(re_check_result) > 0:
             check_result = re_check_result[0]
         else:
             check_result = None
 
-        if name and time and check_result !=None:
+        if name and time and check_result != None:
 
             # 识别结果
             re_data = {
