@@ -15,19 +15,17 @@ class TestInfoOtherResource(Resource):
     # 生成excel
     @classmethod
     def get_excel(cls):
-        # parser = reqparse.RequestParser()
-        # parser.add_argument('BatchID', location='form', required=False, help='BatchID参数类型不正确或缺失')
-        #
-        # try:
-        #     kwargs = parser.parse_args()
-        #     kwargs = commons.put_remove_none(**kwargs)
-        # except Exception as e:
-        #     loggings.exception(1, e)
-        #     return jsonify(code=RET.PARAMERR, message='参数类型不正确或缺失', error='参数类型不正确或缺失')
+        parser = reqparse.RequestParser()
+        parser.add_argument('BatchID', location='args', required=True, help='BatchID参数类型不正确或缺失')
 
-        data = BatchService.get_isCurrent()
-        BatchID = data[0]['BatchID']
-        res = TestInfoService.get_excel(BatchID)
+        try:
+            kwargs = parser.parse_args()
+            kwargs = commons.put_remove_none(**kwargs)
+        except Exception as e:
+            loggings.exception(1, e)
+            return jsonify(code=RET.PARAMERR, message='参数类型不正确或缺失', error='参数类型不正确或缺失')
+
+        res = TestInfoService.get_excel(**kwargs)
 
         try:
             if res['code'] == RET.OK:
