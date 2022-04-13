@@ -17,16 +17,22 @@ class WeixinappResource(Resource):
     def infomation_collection(cls):
         parser = reqparse.RequestParser()
         # parser.add_argument('BatchID', location='form', required=True, help='InfoSet参数类型不正确或缺失')
-        parser.add_argument('StudentID', location='form', required=True, help='InfoSet参数类型不正确或缺失')
-        parser.add_argument('Name', location='form', required=True, help='InfoSet参数类型不正确或缺失')
-        parser.add_argument('Class', location='form', required=True, help='InfoSet参数类型不正确或缺失')
-        parser.add_argument('FileName', location='form', required=True, help='InfoSet参数类型不正确或缺失')
-        parser.add_argument('ImageUrl', location='form', required=True, help='InfoSet参数类型不正确或缺失')
-
+        parser.add_argument('StudentID', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('Name', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('Class', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('FileName', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('ImageUrl', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
 
         try:
             kwargs = parser.parse_args()
+
+            not_nullable_args = ['StudentID', 'Name', 'Class', 'FileName', 'ImageUrl']
+            check = commons.nullable_check(*not_nullable_args, **kwargs)
+            if check:
+                return jsonify(code=RET.PARAMERR, message=check + '参数不可为空', error='参数不可为空')
+
             kwargs = commons.put_remove_none(**kwargs)
+
         except Exception as e:
             loggings.exception(1, e)
             return jsonify(code=RET.PARAMERR, message='参数类型不正确或缺失', error='参数类型不正确或缺失')
