@@ -170,3 +170,10 @@ def tree(data, root, root_field, node_field):
                 children.append(j)
         i['Children'] = children
     return l
+
+#参数非空校验
+def nullable_check(*args, **kwargs):
+    for i in args:
+        if kwargs[i]==None or kwargs[i]=='':
+            return i
+    return False
