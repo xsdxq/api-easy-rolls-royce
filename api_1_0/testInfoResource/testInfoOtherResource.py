@@ -16,7 +16,7 @@ class TestInfoOtherResource(Resource):
     @classmethod
     def get_excel(cls):
         parser = reqparse.RequestParser()
-        parser.add_argument('BatchID', location='args', required=True, help='BatchID参数类型不正确或缺失')
+        parser.add_argument('BatchID', location='args', required=False, help='BatchID参数类型不正确或缺失')
 
         try:
             kwargs = parser.parse_args()
