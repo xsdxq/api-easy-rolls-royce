@@ -20,7 +20,10 @@ class TestInfoService(TestInfoController):
     @classmethod
     def get_excel(cls, **kwargs):
         try:
-            filter_list = [cls.IsDelete == 0, cls.BatchID == kwargs.get('BatchID')]
+            filter_list = [cls.IsDelete == 0]
+            if kwargs.get('BatchID'):
+                filter_list.append(cls.BatchID == kwargs.get('BatchID'))
+
             task_info = db.session.query(
                 TestInfo.Class,
                 TestInfo.Name,
