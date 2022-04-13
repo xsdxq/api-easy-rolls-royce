@@ -36,4 +36,3 @@ class BatchService(BatchController):
         finally:
             db.session.close()
 
-   

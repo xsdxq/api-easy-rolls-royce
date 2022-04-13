@@ -88,7 +88,7 @@ class BatchController(Batch):
             page = int(kwargs.get('Page', 1))
             size = int(kwargs.get('Size', 10))
 
-            Batch_info = db.session.query(cls).filter(*filter_list)
+            Batch_info = db.session.query(cls).filter(*filter_list).order_by(cls.CreateTime.desc())
 
             count = Batch_info.count()
             pages = math.ceil(count / size)
