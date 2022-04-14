@@ -41,6 +41,10 @@ class WeixinappService(TestInfoController):
                 'NameInImage': data['name'],
             })
 
+            if kwargs.get('Name') != kwargs['NameInImage']:
+                return {'code': RET.ROLEERR, 'message': '图片识别姓名为' + kwargs['NameInImage'] + '与填入姓名不符合！请重新填写或上传！',
+                        'data': {'NameInImage': kwargs['NameInImage']}}
+
             # 信息入库
             # 1.检查该批次是否存在该学生信息
             try:
