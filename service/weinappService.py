@@ -42,7 +42,7 @@ class WeixinappService(TestInfoController):
             })
 
             if kwargs.get('Name') != kwargs['NameInImage']:
-                return {'code': RET.ROLEERR, 'message': '图片识别姓名为' + kwargs['NameInImage'] + '与填入姓名不符合！请重新填写或上传！',
+                return {'code': RET.ROLEERR, 'message':  '截图姓名与填入姓名不符合！',
                         'data': {'NameInImage': kwargs['NameInImage']}}
 
             # 信息入库
