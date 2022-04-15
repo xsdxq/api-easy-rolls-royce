@@ -128,6 +128,7 @@ class TestInfoService(TestInfoController):
                 TestInfo.StudentID,
                 TestInfo.BatchID,
                 TestInfo.Name,
+                TestInfo.NameInImage,
                 TestInfo.Class,
                 TestInfo.Grade,
                 TestInfo.TestTime,
