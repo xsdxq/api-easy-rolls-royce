@@ -33,6 +33,7 @@ class TestInfoController(TestInfo):
                 NameInImage=kwargs.get('NameInImage'),
                 TestTime=kwargs.get('TestTime'),
                 ImageUrl=kwargs.get('ImageUrl'),
+                NameTest=kwargs.get('NameTest'),
                 TestResults=kwargs.get('TestResults'),
                 CreateTime=kwargs.get('CreateTime'),
             )
