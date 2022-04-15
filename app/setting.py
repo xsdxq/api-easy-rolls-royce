@@ -29,6 +29,8 @@ class Settings(object):
         cls.UPLOADS_DEFAULT_DEST = os.sep.join(['', 'deploy', 'app', 'images_api.easy-rolls-royce.com'])
         cls.PICTURE_DEAFULT_DEST_PREFIX = os.sep.join(
             ['', 'deploy', 'app', 'images_api.easy-rolls-royce.com', 'photos'])
+        cls.EXCEL_DEAFULT_DEST_PREFIX = os.sep.join(
+            ['', 'deploy', 'app', 'images_api.easy-rolls-royce.com', 'excel'])
 
         # 秘钥
         cls.SECRET_KEY = cls.CONFIG['BASIC']['secret_key']

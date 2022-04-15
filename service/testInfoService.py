@@ -12,6 +12,7 @@ from models.testInfoModel import TestInfo
 from utils import commons, loggings
 from utils.response_code import RET, error_map_EN
 from app import db
+from flask import current_app
 
 
 class TestInfoService(TestInfoController):
@@ -56,7 +57,7 @@ class TestInfoService(TestInfoController):
                 # 将数据写入文件,i是enumerate()函数返回的序号数
                 for j, q in enumerate(p):
                     table.write(i + 1, j, q)
-            file.save('data.xls')
+            file.save(current_app.config['EXCEL_DEAFULT_DEST_PREFIX'] + '/data.xls')
             file_path = os.getcwd()
             return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'file_path': file_path, 'file_name': 'data.xls'}
 
