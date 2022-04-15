@@ -134,11 +134,13 @@ class TestInfoService(TestInfoController):
                 TestInfo.TestResults,
                 TestInfo.ImageUrl,
                 TestInfo.CreateTime,
+                TestInfo.NameTest,
                 Batch.Year,
                 Batch.Term,
                 Batch.Week
             ).filter(*filter_list)\
-             .join(Batch, and_(Batch.BatchID == cls.BatchID, Batch.IsDelete == 0))
+             .join(Batch, and_(Batch.BatchID == cls.BatchID, Batch.IsDelete == 0))\
+             .order_by(cls.NameTest.desc())
 
             count = task_info.count()
             pages = math.ceil(count / size)

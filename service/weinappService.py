@@ -42,8 +42,10 @@ class WeixinappService(TestInfoController):
             })
 
             if kwargs.get('Name') != kwargs['NameInImage']:
-                return {'code': RET.ROLEERR, 'message':  '截图姓名与填入姓名不符合！',
-                        'data': {'NameInImage': kwargs['NameInImage']}}
+                kwargs['NameTest'] = 1
+            else:
+                kwargs['NameTest'] = 0
+
 
             # 信息入库
             # 1.检查该批次是否存在该学生信息
@@ -72,6 +74,7 @@ class WeixinappService(TestInfoController):
                         })
                         print(kwargs)
                         update_res = TestInfoController.update(**kwargs)
+
 
                     if get_res['totalCount'] == 0:
                         print(kwargs)

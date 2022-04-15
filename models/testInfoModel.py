@@ -19,6 +19,7 @@ class TestInfo(db.Model):
     NameInImage = db.Column(db.String(255), info='识别出的姓名')
     TestTime = db.Column(db.String(255), info='检测时间')
     ImageUrl = db.Column(db.String(2000), info='上传截图url')
+    NameTest = db.Column(db.Integer, server_default=db.FetchedValue(), info='姓名校验是否通过 0--通过 1--没通过')
     TestResults = db.Column(db.String(25), info='检测结果')
     CreateTime = db.Column(db.DateTime, server_default=db.FetchedValue(),info='创建时间')
     IsDelete = db.Column(db.Integer, server_default=db.FetchedValue(),info='标志该条数据是否有效: 0--表示有效,1--无效')
