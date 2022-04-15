@@ -27,6 +27,7 @@ class TestInfoController(TestInfo):
                 RecordID=RecordID,
                 BatchID=kwargs.get('BatchID'),
                 StudentID=kwargs.get('StudentID'),
+                Grade=kwargs.get('Grade'),
                 Class=kwargs.get('Class'),
                 Name=kwargs.get('Name'),
                 NameInImage=kwargs.get('NameInImage'),
