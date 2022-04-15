@@ -49,6 +49,7 @@ class TestInfoOtherResource(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('BatchID', location='args', required=False, help='BatchID参数类型不正确或缺失')
         parser.add_argument('StudentID', location='args', required=False, help='StudentID参数类型不正确或缺失')
+        parser.add_argument('Grade', location='args', required=False, help='Class参数类型不正确或缺失')
         parser.add_argument('Class', location='args', required=False, help='Class参数类型不正确或缺失')
         parser.add_argument('Name', location='args', required=False, help='Name参数类型不正确或缺失')
 

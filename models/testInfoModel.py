@@ -13,6 +13,7 @@ class TestInfo(db.Model):
     RecordID = db.Column(db.String(25), info='记录ID')
     BatchID = db.Column(db.String(25), info='批次ID')
     StudentID = db.Column(db.String(25, 'utf8mb4_0900_ai_ci'), info='学生学号')
+    Grade = db.Column(db.String(25), info='学生年级')
     Class = db.Column(db.String(25), info='学生班级')
     Name = db.Column(db.String(25), info='学生姓名')
     NameInImage = db.Column(db.String(255), info='识别出的姓名')

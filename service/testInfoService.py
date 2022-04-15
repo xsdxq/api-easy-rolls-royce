@@ -101,6 +101,9 @@ class TestInfoService(TestInfoController):
             if kwargs.get('Class'):
                 class_text = kwargs.get('Class')
                 filter_list.append(cls.Class.like('%' + class_text + '%'))
+            if kwargs.get('Grade'):
+                grade_text = kwargs.get('Grade')
+                filter_list.append(cls.Grade.like('%' + grade_text + '%'))
             if kwargs.get('Name'):
                 name_text = kwargs.get('Name')
                 filter_list.append(cls.Name.like('%' + name_text + '%'))
@@ -124,6 +127,7 @@ class TestInfoService(TestInfoController):
                 TestInfo.BatchID,
                 TestInfo.Name,
                 TestInfo.Class,
+                TestInfo.Grade,
                 TestInfo.TestTime,
                 TestInfo.TestResults,
                 TestInfo.ImageUrl,

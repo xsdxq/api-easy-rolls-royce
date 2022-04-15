@@ -19,6 +19,7 @@ class WeixinappResource(Resource):
         # parser.add_argument('BatchID', location='form', required=True, help='InfoSet参数类型不正确或缺失')
         parser.add_argument('StudentID', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
         parser.add_argument('Name', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
+        parser.add_argument('Grade', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
         parser.add_argument('Class', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
         parser.add_argument('FileName', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
         parser.add_argument('ImageUrl', location='form', required=True, nullable=False, help='InfoSet参数类型不正确或缺失')
@@ -26,7 +27,7 @@ class WeixinappResource(Resource):
         try:
             kwargs = parser.parse_args()
 
-            not_nullable_args = ['StudentID', 'Name', 'Class', 'FileName', 'ImageUrl']
+            not_nullable_args = ['StudentID', 'Name', 'Grade', 'Class', 'FileName', 'ImageUrl']
             check = commons.nullable_check(*not_nullable_args, **kwargs)
             if check:
                 return jsonify(code=RET.PARAMERR, message=check + '参数不可为空', error='参数不可为空')
