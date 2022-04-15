@@ -23,6 +23,8 @@ class TestInfoService(TestInfoController):
             filter_list = [cls.IsDelete == 0]
             if kwargs.get('BatchID'):
                 filter_list.append(cls.BatchID == kwargs.get('BatchID'))
+            if kwargs.get('Grade'):
+                filter_list.append(cls.Grade == kwargs.get('Grade'))
 
             task_info = db.session.query(
                 TestInfo.Class,
