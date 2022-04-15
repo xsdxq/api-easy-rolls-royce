@@ -23,6 +23,7 @@ class Settings(object):
 
         # cls.UPLOADS_DEFAULT_DEST = "F:\Project\Python\images_api.easy-rolls-royce.com"
         # cls.PICTURE_DEAFULT_DEST_PREFIX = "F:\Project\Python\images_api.easy-rolls-royce.com\photos"
+        # cls.EXCEL_DEAFULT_DEST_PREFIX= "F:\Project\Python\images_api.easy-rolls-royce.com\excel"
 
         cls.LOCAL_IP = os.popen("curl ifconfig.me").read()
 
