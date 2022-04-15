@@ -46,7 +46,6 @@ class WeixinappService(TestInfoController):
             else:
                 kwargs['NameTest'] = 0
 
-
             # 信息入库
             # 1.检查该批次是否存在该学生信息
             try:
@@ -74,7 +73,6 @@ class WeixinappService(TestInfoController):
                         })
                         print(kwargs)
                         update_res = TestInfoController.update(**kwargs)
-
 
                     if get_res['totalCount'] == 0:
                         print(kwargs)
@@ -110,8 +108,10 @@ class WeixinappService(TestInfoController):
 
         # 获得保存后的图片路径
         try:
-            image_url = photos.url(file_name)
-            image_url=image_url[:4]+"s"+image_url[4:]
+            # image_url = photos.url(file_name)
+            # image_url=image_url[:4]+"s"+image_url[4:]
+            loacl_ip = current_app.config['LOCAL_IP']
+            image_url = "http://" + loacl_ip + ':5200/' + '_uploads/photos/' + filename
             base_name = photos.get_basename(file_name).rsplit('.', 1)[0]
 
             # c_url = create_thumbnail(base_name, ext)

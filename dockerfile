@@ -3,11 +3,12 @@ FROM centos:7
 ENV python_version=3.9.6
 LABEL title="centos7_Python"${python_version}
 
-RUN sed -i "s/archive.ubuntu./mirrors.aliyun./g" /etc/apt/sources.list
-RUN sed -i "s/deb.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list
-RUN sed -i "s/security.debian.org/mirrors.aliyun.com\/debian-security/g" /etc/apt/sources.list
+# RUN sed -i "s/archive.ubuntu./mirrors.aliyun./g" /etc/apt/sources.list
+# RUN sed -i "s/deb.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list
+# RUN sed -i "s/security.debian.org/mirrors.aliyun.com\/debian-security/g" /etc/apt/sources.list
 
 # set local yum resource
+RUN yum -y gcc
 RUN yum -y install wget
 RUN cd /etc/yum.repos.d/ \
  && rm -rf /etc/yum.repos.d/*.repo \
