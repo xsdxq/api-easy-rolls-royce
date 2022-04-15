@@ -166,10 +166,41 @@ class TestInfoService(TestInfoController):
         finally:
             db.session.close()
 
+    # 删除信息记录
     @classmethod
-    # 小程序信息提交和图片上传识别
-    def infosubmit(cls, **kwargs):
+    def info_update(cls, **kwargs):
+        filter_list = []
+        filter_list.append(cls.IsDelete == 0)
+        if kwargs.get('RecordID'):
+            filter_list.append(cls.RecordID == kwargs.get('RecordID'))
+        kwargs['NameTest'] = 0
 
-        pass
+        res = db.session.query(cls).filter(*filter_list).with_for_update()
+        if res.first():
+
+            results = {
+                'update_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'RecordID': res.first().RecordID,
+
+            }
+            res.update(kwargs)
+            db.session.commit()
+
+            return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': results}
+        else:
+            return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'error': 'RecordID不存在'}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
