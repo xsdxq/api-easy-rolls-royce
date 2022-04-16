@@ -25,7 +25,7 @@ manager.add_command("runserver", Server(use_debugger=True))
 @app.before_request
 def user_require_token():
     # 不需要token验证的请求点列表
-    permission = ['apiversion.apiversion', 'weixinapp.info-collect', 'weixinapp.pic_upload']
+    permission = ['apiversion.apiversion', 'weixinapp.info-collect', 'weixinapp.pic_upload','admin.adminLogin']
 
     # 如果不是请求上述列表中的接口，需要验证token
     if request.endpoint not in permission:
