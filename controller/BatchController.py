@@ -139,6 +139,11 @@ class BatchController(Batch):
             res.update({'IsDelete': 1})
             db.session.commit()
 
+            # 删除该批次下对应的检测记录
+            from controller.testInfoController import TestInfoController
+            kwargsID = {'BatchID': kwargs.get('BatchID')}
+            res = TestInfoController.delete(**kwargsID)
+
             return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': results}
 
         except Exception as e:
