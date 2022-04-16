@@ -31,6 +31,8 @@ class AdminService(AdminController):
 
         pass_word_admin = kwargs.get('AdminPassword')
         rsa = RSAEncryptionDecryption()
+        # password=rsa.encrypt(pass_word_admin)
+        # print(password)
         pass_word_text = rsa.decrypt(pass_word_admin)
 
         if not pass_word_text:
