@@ -36,3 +36,7 @@ def info_update():
     return TestInfoOtherResource.info_update()
 
 
+# joint query
+@testinfo_blueprint.route('/test/result_update', methods=['POST'], endpoint='result_update')
+def result_update():
+    return TestInfoOtherResource.result_update()

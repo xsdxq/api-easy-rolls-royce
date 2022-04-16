@@ -60,7 +60,7 @@ class WeixinappService(TestInfoController):
 
                 get_res = TestInfoController.get(**{
                     "BatchID": batch_id,
-                    "StudentID": kwargs['StudentID'],
+                    "StudentID": kwargs.get('StudentID'),
                 })
 
                 kwargs.update(**{

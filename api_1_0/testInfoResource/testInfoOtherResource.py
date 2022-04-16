@@ -2,10 +2,11 @@
 # -*- coding:utf-8 -*-
 from flask import jsonify
 from flask_restful import Resource, reqparse
-
-from utils import commons, loggings
+from utils.loggings import loggings
+from utils import commons
 from utils.response_code import RET
 from service.testInfoService import TestInfoService
+from controller.testInfoController import TestInfoController
 from service.BatchService import BatchService
 from flask import send_from_directory
 from flask import make_response
@@ -101,6 +102,9 @@ class TestInfoOtherResource(Resource):
         try:
             kwargs = parser.parse_args()
             kwargs = commons.put_remove_none(**kwargs)
+            kwargs.update(**{
+                'TestResults':'阴性'
+            })
         except Exception as e:
             loggings.exception(1, e)
             return jsonify(code=RET.PARAMERR, message='参数类型不正确或缺失', error='参数类型不正确或缺失')
@@ -111,3 +115,23 @@ class TestInfoOtherResource(Resource):
         else:
             return jsonify(code=res['code'], message=res['message'], error=res['error'])
 
+
+    # 管理员修改检测结果异常记录
+    @classmethod
+    def result_update(cls):
+        parser = reqparse.RequestParser()
+        parser.add_argument('RecordID', location='form', required=True, help='BatchID参数类型不正确或缺失')
+
+
+        try:
+            kwargs = parser.parse_args()
+            kwargs = commons.put_remove_none(**kwargs)
+        except Exception as e:
+            loggings.info(1, e)
+            return jsonify(code=RET.PARAMERR, message='参数类型不正确或缺失', error='参数类型不正确或缺失')
+
+        res = TestInfoController.update(**kwargs)
+        if res['code'] == RET.OK:
+            return jsonify(code=res['code'], message=res['message'], data=res['data'])
+        else:
+            return jsonify(code=res['code'], message=res['message'], error=res['error'])

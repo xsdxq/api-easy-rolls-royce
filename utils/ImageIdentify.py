@@ -50,6 +50,9 @@ def ImageIdentify(img_path):
         print("check_result", re_check_result)
         if len(re_check_result) > 0:
             check_result = re_check_result[0]
+            if check_result not in ['阴性', '阳性']:
+                check_result = '无法识别'
+
         else:
             check_result = None
 

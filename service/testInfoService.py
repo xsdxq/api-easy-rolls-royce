@@ -5,7 +5,7 @@ import datetime
 import os
 
 from xlwt import Workbook
-from sqlalchemy import and_
+from sqlalchemy import and_, case
 from controller.testInfoController import TestInfoController
 from service.BatchService import BatchService
 from models.testInfoModel import TestInfo
@@ -43,7 +43,7 @@ class TestInfoService(TestInfoController):
             info_value = []
             for i, x in enumerate(results):
                 info = list(x.values())
-                index = [str(i+1)]
+                index = [str(i + 1)]
                 info_value.append(index + info)
 
             # import xlwt
@@ -140,9 +140,19 @@ class TestInfoService(TestInfoController):
                 Batch.Year,
                 Batch.Term,
                 Batch.Week
-            ).filter(*filter_list)\
-             .join(Batch, and_(Batch.BatchID == cls.BatchID, Batch.IsDelete == 0))\
-             .order_by(cls.NameTest.desc())
+            ).filter(*filter_list) \
+                .join(Batch, and_(Batch.BatchID == cls.BatchID, Batch.IsDelete == 0)) \
+                .order_by(
+                *(
+                    case(value=cls.TestResults, whens={
+                        "阴性": 3,
+                        "无法识别": 2,
+                        "阳性": 1,
+                    }),
+                    TestInfo.NameTest.desc(),
+                    TestInfo.CreateTime.desc(),
+                )
+            )
 
             count = task_info.count()
             pages = math.ceil(count / size)
@@ -163,12 +173,11 @@ class TestInfoService(TestInfoController):
                     'data': results}
 
         except Exception as e:
-            loggings.exception(1, e)
             return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'error': str(e)}
         finally:
             db.session.close()
 
-    # 删除信息记录
+    # 更新姓名识别异常
     @classmethod
     def info_update(cls, **kwargs):
         filter_list = []
@@ -191,18 +200,3 @@ class TestInfoService(TestInfoController):
             return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'data': results}
         else:
             return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'error': 'RecordID不存在'}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
