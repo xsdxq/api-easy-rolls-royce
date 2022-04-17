@@ -190,7 +190,7 @@ class TestInfoService(TestInfoController):
         if res.first():
 
             results = {
-                'update_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                # 'update_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'RecordID': res.first().RecordID,
 
             }

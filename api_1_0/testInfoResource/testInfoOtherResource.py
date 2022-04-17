@@ -102,9 +102,7 @@ class TestInfoOtherResource(Resource):
         try:
             kwargs = parser.parse_args()
             kwargs = commons.put_remove_none(**kwargs)
-            kwargs.update(**{
-                'TestResults': '阴性'
-            })
+
         except Exception as e:
             loggings.exception(1, e)
             return jsonify(code=RET.PARAMERR, message='参数类型不正确或缺失', error='参数类型不正确或缺失')
