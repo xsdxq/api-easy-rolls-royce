@@ -161,7 +161,7 @@ class TestInfoController(TestInfo):
             res = db.session.query(cls).filter(*filter_list).with_for_update()
 
             results = {
-                'update_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                # 'update_time': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'RecordID': res.first().RecordID,
                 
             }
