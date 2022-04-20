@@ -17,6 +17,61 @@ from flask import current_app
 
 class TestInfoService(TestInfoController):
 
+    @classmethod
+    def unsubmit_query(cls, **kwargs):
+        # 已提交查询结果
+        try:
+            from models.studentInfoModel import StudentInfo
+            filter_list = [cls.IsDelete == 0]
+            unsublist_filter_list = []
+            # 批次号必填
+            filter_list.append(cls.BatchID == kwargs.get('BatchID'))
+            # 模糊查询
+            if kwargs.get('Class'):
+                class_text = kwargs.get('Class')
+                filter_list.append(cls.Class.like('%' + class_text + '%'))
+                unsublist_filter_list.append(StudentInfo.Class.like('%' + class_text + '%'))
+            if kwargs.get('Grade'):
+                grade_text = kwargs.get('Grade')
+                filter_list.append(cls.Grade.like('%' + grade_text + '%'))
+                unsublist_filter_list.append(StudentInfo.Grade.like('%' + grade_text + '%'))
+
+            # 已提交的学生信息
+            student_info = db.session.query(
+                TestInfo.StudentID,
+            ).filter(*filter_list)
+            # student_info = commons.query_to_dict(student_info)
+            print("student_info: ", student_info)
+
+            unsublist_filter_list.append(StudentInfo.StudentID.not_in(student_info))
+
+            unsbumit_student_info = db.session.query(
+                StudentInfo.StudentID,
+                StudentInfo.Name,
+                StudentInfo.Class,
+                StudentInfo.Grade,
+            ).filter(*unsublist_filter_list)
+            print("unsbumit_student_info: ", unsbumit_student_info)
+
+            page = int(kwargs.get('Page', 1))
+            size = int(kwargs.get('Size', 10))
+
+            count = unsbumit_student_info.count()
+            pages = math.ceil(count / size)
+            unsbumit_student_info = unsbumit_student_info.limit(size).offset((page - 1) * size).all()
+            results = commons.query_to_dict(unsbumit_student_info)
+
+            print(unsbumit_student_info)
+
+            return {'code': RET.OK, 'message': error_map_EN[RET.OK], 'totalCount': count, 'totalPage': pages,
+                    'data': results}
+
+        except Exception as e:
+            return {'code': RET.DBERR, 'message': error_map_EN[RET.DBERR], 'error': str(e)}
+
+        finally:
+            db.session.close()
+
     # 生成excel
     @classmethod
     def get_excel(cls, **kwargs):

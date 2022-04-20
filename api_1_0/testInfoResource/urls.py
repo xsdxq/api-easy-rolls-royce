@@ -40,3 +40,8 @@ def info_update():
 @testinfo_blueprint.route('/test/result_update', methods=['POST'], endpoint='result_update')
 def result_update():
     return TestInfoOtherResource.result_update()
+
+# unsubmit query
+@testinfo_blueprint.route('/testinfo/unsubmit', methods=['GET'], endpoint='unsubmit')
+def unsubmit_query():
+    return TestInfoOtherResource.unsubmit_query()
